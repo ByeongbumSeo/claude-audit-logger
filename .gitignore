@@ -1,0 +1,8 @@
+# OMC state (plugin development only)
+.omc/
+
+# OS files
+.DS_Store
+
+# Context document (not part of plugin)
+20260411_AUDIT_HOOK_PLUGIN_CONTEXT.md

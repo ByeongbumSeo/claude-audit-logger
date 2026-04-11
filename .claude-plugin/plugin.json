@@ -1,0 +1,20 @@
+{
+  "name": "claude-audit-logger",
+  "version": "1.0.0",
+  "description": "Zero-cost audit trail for Claude Code bypass-permissions mode. Logs every state-changing tool call with zero token overhead.",
+  "author": {
+    "name": "byeongbumseo"
+  },
+  "repository": "https://github.com/ByeongbumSeo/claude-audit-logger",
+  "homepage": "https://github.com/ByeongbumSeo/claude-audit-logger",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "audit",
+    "logging",
+    "bypass-permissions",
+    "security"
+  ],
+  "skills": "./skills/"
+}
