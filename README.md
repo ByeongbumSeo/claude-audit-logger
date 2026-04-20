@@ -88,6 +88,32 @@ Read-only commands (`ls`, `cat`, `grep`, `git status`, etc.) are **excluded** by
 - Absolute paths (to distinguish across projects in user scope)
 - Session header includes cwd
 
+### Output example
+
+When you run `/audit session`, Claude reads the log above and renders it as a grouped table:
+
+> ## Audit Log (session)
+>
+> **Session**: abc123 | **Started**: 2026-04-08 14:30:00 | `/Users/.../my-project`
+>
+> ### Task 1: Add findByIdx to MemberService (14:30:05)
+>
+> | Time | Type | Target |
+> |------|------|--------|
+> | 14:30:12 | EDIT | `src/main/.../MemberService.java` |
+> | 14:30:25 | BASH | `./gradlew test` |
+> | 14:30:50 | BASH:FAIL | `./gradlew test --tests BrokenTest` |
+>
+> ### Task 2: Write tests (14:35:00)
+>
+> | Time | Type | Target |
+> |------|------|--------|
+> | 14:35:10 | CREATE | `src/test/.../MemberServiceTest.java` |
+>
+> **Summary**: 3 succeeded, 1 failed
+
+`/audit` (task mode) shows only the entries after the most recent `===` separator. `/audit today` merges entries from all session logs dated today. Filters (`--success`, `--fail`) can be combined with any mode.
+
 ### Token cost
 
 | Component | Token cost | Frequency |

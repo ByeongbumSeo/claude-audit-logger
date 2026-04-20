@@ -88,6 +88,32 @@ Claude 도구 실행  →  실행 완료  →  PostToolUse (성공 기록)
 - 절대경로 사용 (User scope에서 여러 프로젝트 구분)
 - 세션 헤더에 cwd 포함
 
+### 출력 예시
+
+`/audit session` 실행 시, Claude는 위의 로그를 읽어 작업별 테이블로 렌더링합니다:
+
+> ## Audit Log (session)
+>
+> **세션**: abc123 | **시작**: 2026-04-08 14:30:00 | `/Users/.../my-project`
+>
+> ### 작업 1: MemberService에 findByIdx 추가해 (14:30:05)
+>
+> | 시각 | 유형 | 대상 |
+> |------|------|------|
+> | 14:30:12 | EDIT | `src/main/.../MemberService.java` |
+> | 14:30:25 | BASH | `./gradlew test` |
+> | 14:30:50 | BASH:FAIL | `./gradlew test --tests BrokenTest` |
+>
+> ### 작업 2: 테스트 코드 보강해 (14:35:00)
+>
+> | 시각 | 유형 | 대상 |
+> |------|------|------|
+> | 14:35:10 | CREATE | `src/test/.../MemberServiceTest.java` |
+>
+> **요약**: 성공 3개, 실패 1개
+
+`/audit` (task 모드)는 가장 최근 `===` 구분선 이후의 엔트리만 표시합니다. `/audit today`는 오늘 날짜의 모든 세션 로그를 통합해서 보여줍니다. 필터(`--success`, `--fail`)는 모든 모드와 조합 가능합니다.
+
 ### 토큰 비용
 
 | 구성 요소 | 토큰 비용 | 빈도 |
