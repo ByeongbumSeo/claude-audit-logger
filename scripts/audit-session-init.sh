@@ -9,9 +9,8 @@ if ! command -v jq &>/dev/null; then
 fi
 
 INPUT=$(cat)
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
-EVENT_TYPE=$(echo "$INPUT" | jq -r '.source // "startup"')
-CWD=$(echo "$INPUT" | jq -r '.cwd // empty')
+IFS=$'\t' read -r SESSION_ID EVENT_TYPE CWD <<< \
+  "$(echo "$INPUT" | jq -r '[.session_id // "", .source // "startup", .cwd // ""] | @tsv')"
 
 if [[ -z "$SESSION_ID" ]]; then
   exit 0
