@@ -3,10 +3,13 @@
 # Records only after execution, capturing success/failure status
 # Skips read-only/exploration tools and commands
 
+if ! command -v jq &>/dev/null; then
+  exit 0
+fi
+
 INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
-EVENT_NAME=$(echo "$INPUT" | jq -r '.hook_event_name // empty')
+IFS=$'\t' read -r TOOL_NAME SESSION_ID EVENT_NAME <<< \
+  "$(echo "$INPUT" | jq -r '[.tool_name // "", .session_id // "", .hook_event_name // ""] | @tsv')"
 
 if [[ -z "$SESSION_ID" ]]; then
   exit 0
