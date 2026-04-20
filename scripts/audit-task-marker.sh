@@ -8,6 +8,7 @@ fi
 
 INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
+SESSION_ID=$(echo "$SESSION_ID" | tr -cd 'a-zA-Z0-9_-')
 
 if [[ -z "$SESSION_ID" ]]; then
   exit 0
