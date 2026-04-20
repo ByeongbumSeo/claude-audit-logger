@@ -1,0 +1,34 @@
+{
+  "name": "claude-audit-logger",
+  "owner": {
+    "name": "byeongbumseo",
+    "url": "https://github.com/ByeongbumSeo"
+  },
+  "metadata": {
+    "description": "Zero-cost audit trail for Claude Code bypass-permissions mode. Logs state-changing tool calls with zero token overhead.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "claude-audit-logger",
+      "source": "./",
+      "description": "Zero-cost audit trail for Claude Code bypass-permissions mode. Logs every state-changing tool call with zero token overhead.",
+      "version": "1.0.0",
+      "author": {
+        "name": "byeongbumseo"
+      },
+      "homepage": "https://github.com/ByeongbumSeo/claude-audit-logger",
+      "repository": "https://github.com/ByeongbumSeo/claude-audit-logger",
+      "license": "MIT",
+      "category": "security",
+      "keywords": [
+        "claude-code",
+        "plugin",
+        "audit",
+        "logging",
+        "bypass-permissions",
+        "security"
+      ]
+    }
+  ]
+}
