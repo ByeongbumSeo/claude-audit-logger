@@ -5,13 +5,13 @@
     "url": "https://github.com/ByeongbumSeo"
   },
   "metadata": {
-    "description": "Marketplace for claude-audit-logger — zero-cost audit trail for Claude Code bypass-permissions mode.",
+    "description": "Zero-cost audit trail for Claude Code bypass-permissions mode. Logs state-changing tool calls with zero token overhead.",
     "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "claude-audit-logger",
-      "source": ".",
+      "source": "./",
       "description": "Zero-cost audit trail for Claude Code bypass-permissions mode. Logs every state-changing tool call with zero token overhead.",
       "version": "1.0.0",
       "author": {
