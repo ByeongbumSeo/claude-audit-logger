@@ -4,6 +4,10 @@
 # - resume: ensure file exists, append resume marker
 # - clear/compact: append marker only
 
+if ! command -v jq &>/dev/null; then
+  exit 0
+fi
+
 INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
 EVENT_TYPE=$(echo "$INPUT" | jq -r '.source // "startup"')
@@ -22,7 +26,7 @@ mkdir -p "$LOG_DIR"
 # Expose session ID to all Bash commands via CLAUDE_ENV_FILE
 # This allows /audit skill to identify the correct session without shared pointer files
 if [[ -n "$CLAUDE_ENV_FILE" ]]; then
-  echo "export AUDIT_SESSION_ID=$SESSION_ID" >> "$CLAUDE_ENV_FILE"
+  echo "export AUDIT_SESSION_ID=\"$SESSION_ID\"" >> "$CLAUDE_ENV_FILE"
 fi
 
 # Cleanup logs older than 14 days

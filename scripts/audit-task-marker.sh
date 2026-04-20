@@ -2,6 +2,10 @@
 # UserPromptSubmit hook: Mark task boundaries in audit log
 # Writes user prompt as a separator line between task groups
 
+if ! command -v jq &>/dev/null; then
+  exit 0
+fi
+
 INPUT=$(cat)
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
 
