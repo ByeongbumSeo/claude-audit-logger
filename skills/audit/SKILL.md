@@ -1,6 +1,6 @@
 ---
 name: audit
-description: View audit logs of auto-approved commands (file creates/edits, bash executions) by task, session, or today. Use when you see keywords like 'audit', 'audit log', 'command log', 'what did it do', 'trace log'.
+description: (claude-audit-logger) View audit logs of auto-approved commands (file creates/edits, bash executions) by task, session, or today. Use when you see keywords like 'audit', 'audit log', 'command log', 'what did it do', 'trace log'.
 user_invocable: true
 argument-hint: "[task|session|today] [--success|--fail]"
 ---
@@ -113,6 +113,42 @@ Categorize and display:
 
 ### 6. When no logs exist
 
-- No log file: "Audit log has not been created yet. It will start recording from the next session."
-- Log file exists but no entries: "No important commands recorded. (Exploration commands are not logged)"
-- Filter returns empty: "No commands matching the filter." (e.g., `--fail` but no failures)
+Differentiate between expected-empty states and misconfigurations so users know whether to wait, retry, or fix setup.
+
+**6-a. Filter returned empty (normal)**
+
+The log has entries but the filter excluded all of them.
+
+> "No commands matching the filter." (e.g., `--fail` but no failures)
+
+**6-b. Log file exists but has no entries (normal)**
+
+The session started correctly but no state-changing commands have run yet.
+
+> "No important commands recorded yet. (Read-only/exploration commands are not logged.)"
+
+**6-c. Log file is missing → run a quick diagnosis**
+
+Before showing the generic "log not created" message, check two common misconfigurations and surface actionable guidance.
+
+Run both checks with the Bash tool:
+
+```bash
+# Check 1: is jq installed?
+command -v jq &>/dev/null && echo "jq_ok" || echo "jq_missing"
+
+# Check 2: is the SessionStart hook environment set?
+echo "session_id=${AUDIT_SESSION_ID:-<empty>}"
+```
+
+Then decide what to show:
+
+| jq | AUDIT_SESSION_ID | Message |
+|----|------------------|---------|
+| missing | any | "`jq` is not installed — all hook scripts exit silently without it. Install jq: `brew install jq` (macOS) or `sudo apt install jq` (Linux). Then restart Claude Code." |
+| ok | empty | "The SessionStart hook did not run in this session. This usually happens when the plugin was installed mid-session. Restart Claude Code to trigger initialization." |
+| ok | set | "The SessionStart hook ran but the log file is unexpectedly missing. Run `/audit-doctor` for a full health check." |
+
+Always append a one-line pointer to the full health check skill:
+
+> Run `/audit-doctor` for a comprehensive diagnostic.

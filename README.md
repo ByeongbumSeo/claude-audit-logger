@@ -16,6 +16,26 @@ When you run Claude Code with `--dangerously-skip-permissions`, every tool call 
 
 ## Quick Start
 
+### Prerequisites
+
+This plugin relies on `jq` to parse hook payloads. **Install `jq` before activating the plugin** — hook scripts exit silently when `jq` is missing, which means no logs are recorded and no error is shown.
+
+```bash
+# macOS
+brew install jq
+
+# Debian / Ubuntu
+sudo apt install jq
+
+# Fedora / RHEL
+sudo dnf install jq
+
+# Arch
+sudo pacman -S jq
+```
+
+Verify: `jq --version` should print a version string.
+
 ### Install
 
 ```bash
@@ -25,6 +45,8 @@ When you run Claude Code with `--dangerously-skip-permissions`, every tool call 
 # Install plugin
 /plugin install claude-audit-logger
 ```
+
+After installing, **restart Claude Code** so the `SessionStart` hook fires in a fresh session.
 
 ### Verify
 
@@ -46,6 +68,7 @@ If you see the command you just executed, it's working.
 | `/audit --success` | Only successful commands |
 | `/audit --fail` | Only failed commands |
 | `/audit session --fail` | Failed commands from entire session |
+| `/audit-doctor` | Diagnose plugin health (jq, hooks, session, log dir) |
 
 ## How it works
 
