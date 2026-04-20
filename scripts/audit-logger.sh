@@ -3,6 +3,10 @@
 # Records only after execution, capturing success/failure status
 # Skips read-only/exploration tools and commands
 
+if ! command -v jq &>/dev/null; then
+  exit 0
+fi
+
 INPUT=$(cat)
 TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name // empty')
 SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
