@@ -47,6 +47,8 @@ case "$TOOL_NAME" in
   Bash)
     CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
     [[ -z "$CMD" ]] && exit 0
+    # Normalize: strip leading whitespace + flatten multiline for skip-pattern matching and log parsing
+    CMD=$(echo "$CMD" | tr '\n' ' ' | sed 's/^[[:space:]]*//; s/  */ /g')
 
     # Always log if command contains file redirects (even if starts with skip pattern)
     HAS_REDIRECT=false
@@ -56,7 +58,7 @@ case "$TOOL_NAME" in
 
     # Skip read-only / exploration commands (unless they redirect to files)
     if [[ "$HAS_REDIRECT" == "false" ]]; then
-      if echo "$CMD" | grep -qE "^(ls|cat |head |tail |less |more |grep |rg |find |echo |printf |pwd|which |type |file |wc |stat |diff |test |\[|true|false|cd |env$|printenv|hostname|uname|date$|whoami|id$|command -v|git (log|status|show|diff|branch|describe|remote -v|rev-parse|config --get|tag -l)|java (-version|--version)|javac |node (-v|--version)|npm (-v|--version|ls|list|view|info|outdated)|command -v|\.\/gradlew (dependencies|tasks|properties|help)|mkdir -p \\\$HOME|mkdir -p ~/|sort |uniq |tr |cut |awk |sed -n|jq )"; then
+      if echo "$CMD" | grep -qE "^(ls|cat |head |tail |less |more |grep |rg |find |echo |printf |pwd|which |type |file |wc |stat |diff |test |\[|true|false|cd |env$|printenv|hostname|uname|date$|whoami|id$|command -v|git (log|status|show|diff|branch|describe|remote -v|rev-parse|config --get|tag -l)|java (-version|--version)|node (-v|--version)|npm (-v|--version|ls|list|view|info|outdated)|\.\/gradlew (dependencies|tasks|properties|help)|sort |uniq |tr |cut |awk |sed -n|jq )"; then
         exit 0
       fi
     fi
