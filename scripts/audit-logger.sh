@@ -47,10 +47,8 @@ case "$TOOL_NAME" in
   Bash)
     CMD=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
     [[ -z "$CMD" ]] && exit 0
-    # Strip leading whitespace to prevent skip pattern bypass
-    CMD=$(echo "$CMD" | sed 's/^[[:space:]]*//')
-    # Flatten multiline commands to single line for log parsing
-    CMD=$(echo "$CMD" | tr '\n' ' ' | sed 's/  */ /g')
+    # Normalize: strip leading whitespace + flatten multiline for skip-pattern matching and log parsing
+    CMD=$(echo "$CMD" | tr '\n' ' ' | sed 's/^[[:space:]]*//; s/  */ /g')
 
     # Always log if command contains file redirects (even if starts with skip pattern)
     HAS_REDIRECT=false
