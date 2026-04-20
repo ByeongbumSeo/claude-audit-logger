@@ -11,6 +11,7 @@ fi
 INPUT=$(cat)
 IFS=$'\t' read -r SESSION_ID EVENT_TYPE CWD <<< \
   "$(echo "$INPUT" | jq -r '[.session_id // "", .source // "startup", .cwd // ""] | @tsv')"
+SESSION_ID=$(echo "$SESSION_ID" | tr -cd 'a-zA-Z0-9_-')
 
 if [[ -z "$SESSION_ID" ]]; then
   exit 0

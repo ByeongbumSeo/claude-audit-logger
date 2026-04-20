@@ -10,6 +10,7 @@ fi
 INPUT=$(cat)
 IFS=$'\t' read -r TOOL_NAME SESSION_ID EVENT_NAME <<< \
   "$(echo "$INPUT" | jq -r '[.tool_name // "", .session_id // "", .hook_event_name // ""] | @tsv')"
+SESSION_ID=$(echo "$SESSION_ID" | tr -cd 'a-zA-Z0-9_-')
 
 if [[ -z "$SESSION_ID" ]]; then
   exit 0

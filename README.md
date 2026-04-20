@@ -107,6 +107,9 @@ Read-only commands (`ls`, `cat`, `grep`, `git status`, etc.) are **excluded** by
 - Logs older than 14 days are automatically deleted on session start
 - Multi-session safe: each session uses its own `CLAUDE_ENV_FILE` — no shared pointers, no race conditions
 
+> **Note**: Task separator lines include a truncated snippet (up to 100 characters) of your prompt text.
+> Since logs are stored locally in plain text, avoid pasting sensitive information (passwords, tokens, API keys) directly into prompts.
+
 ## Requirements
 
 - Claude Code CLI
