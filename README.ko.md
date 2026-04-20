@@ -16,6 +16,26 @@
 
 ## Quick Start
 
+### 사전 준비
+
+이 플러그인은 hook payload 파싱을 위해 `jq`에 의존합니다. **플러그인을 활성화하기 전에 `jq`를 먼저 설치해야 합니다** — `jq`가 없으면 hook 스크립트가 조용히 종료되며 로그도 기록되지 않고 에러도 표시되지 않습니다.
+
+```bash
+# macOS
+brew install jq
+
+# Debian / Ubuntu
+sudo apt install jq
+
+# Fedora / RHEL
+sudo dnf install jq
+
+# Arch
+sudo pacman -S jq
+```
+
+확인: `jq --version`이 버전 정보를 출력하면 정상입니다.
+
 ### 설치
 
 ```bash
@@ -25,6 +45,8 @@
 # 플러그인 설치
 /plugin install claude-audit-logger
 ```
+
+설치 후 **Claude Code를 재시작**하세요. 새 세션에서 `SessionStart` hook이 발화되어야 감사 로그 기록이 시작됩니다.
 
 ### 동작 확인
 
@@ -46,6 +68,7 @@
 | `/audit --success` | 성공한 명령만 |
 | `/audit --fail` | 실패한 명령만 |
 | `/audit session --fail` | 세션 전체 중 실패만 |
+| `/audit-doctor` | 플러그인 헬스 체크 (jq, 훅, 세션, 로그 디렉토리 진단) |
 
 ## 동작 원리
 
