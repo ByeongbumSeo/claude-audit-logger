@@ -72,16 +72,20 @@ If you see the command you just executed, it's working.
 
 ## How it works
 
-```
-User prompt  →  UserPromptSubmit  →  Task separator recorded
-                      ↓
-Claude tool  →  Tool completes    →  PostToolUse (success logged)
-                                  →  PostToolUseFailure (failure logged)
+Events fire in this order during a session. Each hook is registered as a `command`-type shell script — it writes to the log file on disk and injects **nothing** into Claude's context.
 
-Session start  →  SessionStart    →  Log initialized, session ID set
+```
+[1] Session opens
+      └─ SessionStart        →  create {sessionId}.log, export AUDIT_SESSION_ID
+
+[2] You submit a prompt
+      └─ UserPromptSubmit    →  append "=== [time] <prompt> ===" separator
+
+[3] Claude runs a tool ──┬─ on success → PostToolUse         → "[time] [TYPE] target"
+                         └─ on failure → PostToolUseFailure  → "[time] [TYPE:FAIL] target"
 ```
 
-All hooks run as shell scripts (`command` type). They write to log files on disk and inject **nothing** into Claude's context.
+Steps [2]–[3] repeat for every prompt and tool call until the session ends.
 
 ### What gets logged
 

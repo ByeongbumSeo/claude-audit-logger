@@ -72,16 +72,20 @@ sudo pacman -S jq
 
 ## 동작 원리
 
-```
-사용자 프롬프트  →  UserPromptSubmit  →  작업 구분선 기록
-                        ↓
-Claude 도구 실행  →  실행 완료  →  PostToolUse (성공 기록)
-                               →  PostToolUseFailure (실패 기록)
+세션 동안 이벤트는 아래 순서로 발생합니다. 각 Hook은 `command` 타입 셸 스크립트로 등록되어, 디스크의 로그 파일에 기록만 하고 Claude 컨텍스트에는 **아무것도 주입하지 않습니다**.
 
-세션 시작  →  SessionStart  →  로그 초기화, 세션 ID 설정
+```
+[1] 세션 시작
+      └─ SessionStart        →  {sessionId}.log 생성, AUDIT_SESSION_ID 설정
+
+[2] 사용자 프롬프트 입력
+      └─ UserPromptSubmit    →  "=== [시각] <프롬프트> ===" 구분선 추가
+
+[3] Claude 도구 실행 ──┬─ 성공 시 → PostToolUse         → "[시각] [TYPE] target"
+                       └─ 실패 시 → PostToolUseFailure  → "[시각] [TYPE:FAIL] target"
 ```
 
-모든 Hook은 셸 스크립트(`command` 타입)로 실행됩니다. 디스크의 로그 파일에 기록만 하며, Claude 컨텍스트에는 **아무것도 주입하지 않습니다**.
+[2]–[3]은 세션이 끝날 때까지 매 프롬프트/도구 호출마다 반복됩니다.
 
 ### 기록 대상
 
