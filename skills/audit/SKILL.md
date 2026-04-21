@@ -1,6 +1,6 @@
 ---
 name: audit
-description: (claude-audit-logger) View audit logs of auto-approved commands (file creates/edits, bash executions) by task, session, or today. Use when you see keywords like 'audit', 'audit log', 'command log', 'what did it do', 'trace log'.
+description: View audit logs of auto-approved commands (file creates/edits, bash executions) by task, session, or today. Use when you see keywords like 'audit', 'audit log', 'command log', 'what did it do', 'trace log'.
 user_invocable: true
 argument-hint: "[task|session|today] [--success|--fail]"
 ---
