@@ -1,6 +1,6 @@
 ---
 name: audit-doctor
-description: (claude-audit-logger) Diagnose plugin health. Checks jq installation, hook script files, session environment, and log directory. Use when /audit shows no logs or when troubleshooting why the plugin is not recording commands.
+description: Diagnose plugin health. Checks jq installation, hook script files, session environment, and log directory. Use when /audit shows no logs or when troubleshooting why the plugin is not recording commands.
 user_invocable: true
 ---
 
