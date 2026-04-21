@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Zero-cost audit trail for Claude Code bypass-permissions mode. Logs state-changing tool calls with zero token overhead.",
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "plugins": [
     {
       "name": "claude-audit-logger",
       "source": "./",
       "description": "Zero-cost audit trail for Claude Code bypass-permissions mode. Logs every state-changing tool call with zero token overhead.",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "author": {
         "name": "byeongbumseo"
       },
