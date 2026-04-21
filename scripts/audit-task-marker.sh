@@ -21,8 +21,14 @@ if [[ ! -f "$LOG_FILE" ]]; then
   exit 0
 fi
 
-# Extract user prompt text (UserPromptSubmit payload: top-level .prompt)
-CONTENT=$(echo "$INPUT" | jq -r '.prompt // ""')
+# Extract user prompt text (UserPromptSubmit payload: top-level .prompt is a string).
+# Type guard: non-strings (int/bool) collapse to "" so the length check below skips them.
+CONTENT=$(echo "$INPUT" | jq -r '.prompt | if type == "string" then . else "" end')
+
+# Flatten newlines/carriage returns so the "=== ... ===" separator stays on a single log line.
+# Without this, a multi-line prompt (e.g. pasted code) splits the separator across multiple
+# lines and breaks /audit task-mode boundary detection.
+CONTENT=$(echo "$CONTENT" | tr '\n\r' ' ')
 
 # Truncate to 100 chars for readability
 if [[ ${#CONTENT} -gt 100 ]]; then
