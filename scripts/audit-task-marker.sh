@@ -21,16 +21,8 @@ if [[ ! -f "$LOG_FILE" ]]; then
   exit 0
 fi
 
-# Extract user message (handle both string and array content)
-CONTENT=$(echo "$INPUT" | jq -r '
-  if .message.content | type == "string" then
-    .message.content
-  elif .message.content | type == "array" then
-    [.message.content[] | select(.type == "text") | .text] | join(" ")
-  else
-    ""
-  end
-' 2>/dev/null)
+# Extract user prompt text (UserPromptSubmit payload: top-level .prompt)
+CONTENT=$(echo "$INPUT" | jq -r '.prompt // ""')
 
 # Truncate to 100 chars for readability
 if [[ ${#CONTENT} -gt 100 ]]; then
