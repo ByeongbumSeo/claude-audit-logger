@@ -5,6 +5,18 @@ All notable changes to claude-audit-logger are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-04-21
+
+### Fixed
+
+- **`UserPromptSubmit` hook read the wrong payload field** (#15) — `scripts/audit-task-marker.sh` extracted the user prompt from `.message.content`, but Claude Code's actual `UserPromptSubmit` payload places the prompt at top-level `.prompt` (string). `CONTENT` was always empty, the length-2 guard tripped, and the script silently exited without writing the `=== ... ===` task separator. `/audit` task mode was effectively non-functional since 1.0.0. Now reads `.prompt` directly and drops the `2>/dev/null` that masked the silent schema mismatch.
+- **Multi-line prompts split the task separator across log lines** — surfaced as a follow-up after the `.prompt` fix above made `CONTENT` non-empty for the first time. A pasted multi-line prompt produced `=== [ts] line1\nline2 ===` rendered as two log lines, which broke `/audit` task-mode boundary detection. Embedded newlines and carriage returns now collapse to spaces before the line is written.
+- **Non-string `.prompt` produced fake separators** — defensive guard surfaced in pre-merge review. If Claude Code ever sends `.prompt` as an integer or boolean, `jq -r` coerces it to its string form (`"42"`, `"true"`) which passes the length-2 guard and writes a misleading separator. A jq type guard now collapses non-strings to `""`.
+
+### Removed
+
+- **Manual `(claude-audit-logger)` description prefix on plugin skills** (#16) — added in 1.1.0 so users could identify plugin ownership in the skill list, but Claude Code already prepends the plugin name automatically for plugin-owned skills, producing duplicate prefixes (`(claude-audit-logger) (claude-audit-logger) ...`) in the slash menu. The manual prefix has been removed from `skills/audit/SKILL.md` and `skills/audit-doctor/SKILL.md`.
+
 ## [1.1.0] - 2026-04-20
 
 ### Added
@@ -48,5 +60,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automatic cleanup of logs older than 14 days.
 - English and Korean README.
 
+[1.1.1]: https://github.com/ByeongbumSeo/claude-audit-logger/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/ByeongbumSeo/claude-audit-logger/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/ByeongbumSeo/claude-audit-logger/releases/tag/v1.0.0
