@@ -30,6 +30,13 @@ CONTENT=$(echo "$INPUT" | jq -r '.prompt | if type == "string" then . else "" en
 # lines and breaks /audit task-mode boundary detection.
 CONTENT=$(echo "$CONTENT" | tr '\n\r' ' ')
 
+# Skip separator writing for audit meta-skill invocations.
+# /audit and /audit-doctor are read-only view skills; if we wrote a separator for them,
+# `/audit task` would treat its own invocation as the task boundary and always return empty.
+if [[ "$CONTENT" =~ ^/(claude-audit-logger:)?audit(-doctor)?([[:space:]]|$) ]]; then
+  exit 0
+fi
+
 # Truncate to 100 chars for readability
 if [[ ${#CONTENT} -gt 100 ]]; then
   CONTENT="${CONTENT:0:100}..."
